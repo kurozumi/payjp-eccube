@@ -9,6 +9,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ApiKeyType extends AbstractType
 {
@@ -22,15 +23,10 @@ class ApiKeyType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $data = $options['data'];
-        if (!is_null($data)) {
-            $api_key_secret = $data->getApiKeySecret();
-        }
         $builder
             ->add('api_key_secret', 'text', array(
                 'label' => '秘密キー',
                 'required' => true,
-                'data' => $api_key_secret,
                 'attr' => array(
                     'class' => 'pay_jp_api_key',
                 ),
@@ -50,6 +46,13 @@ class ApiKeyType extends AbstractType
 
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
+    }
+    
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class' => 'Plugin\PayJp\Entity\PayJpConfig',
+        ));
     }
 
     public function getName()

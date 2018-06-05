@@ -13,7 +13,7 @@ $(function() {
     $('.show_charge_id').each(function() {
         var id = $(this).attr('id');
         var order_id = id.substr(15);
-        $.get('/testadmin/plugin/pay_jp/api/charge/' + order_id, function(result) {
+        $.get('/admin/plugin/pay_jp/api/charge/' + order_id, function(result) {
             $('#' + id).text(result);
         });
     });

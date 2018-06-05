@@ -6,9 +6,6 @@ Shopping/index.twig:
 front.shopping.confirm.initialize:
     - [onFrontShoppingConfirmInitialize, NORMAL]
 
-admin.order.edit.index.initialize:
-    - [onAdminOrderEditIndexInitialize, NORMAL]
-
 Admin/Order/edit.twig:
     - [onRenderAdminOrderEdit, NORMAL]
 

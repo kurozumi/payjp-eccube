@@ -260,6 +260,7 @@ class PayJpEvent
                 $payJpOrder = new PayJpOrder();
                 $payJpOrder->setOrderId($order->getId());
                 $payJpOrder->setPayJpCustomerId($this->payJpCustomer->getId());
+                $payJpOrder->setPayJpChargeId($chargeResult->__get('id'));
                 $this->app['orm.em']->persist($payJpOrder);
                 $this->app['orm.em']->flush($payJpOrder);
             } else {
