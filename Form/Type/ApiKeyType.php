@@ -30,7 +30,6 @@ class ApiKeyType extends AbstractType
                 'attr' => array(
                     'class' => 'pay_jp_api_key',
                 ),
-                'mapped' => false,
                 'constraints' => array(
                     new Assert\NotBlank(array(
                             'message' => '秘密キーが入力されていません。')
