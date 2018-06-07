@@ -327,9 +327,7 @@ class PayJpEvent
 
         // {{ form.vars.value.payment_method }} を置き換える
         $replaced = "{{ form.vars.value.payment_method }}";
-        $replaced .= "{% if Order.payment_method == 'クレジットカード' %}";
-        $replaced .= '<p style="font-size: 85%;">支払いID: <span class="show_charge_id" id="show_charge_id_{{ Order.id }}"></span></p>';
-        $replaced .= "{% endif %}";
+        $replaced .= '<p style="font-size: 85%;"><span class="show_charge_id" id="show_charge_id_{{ Order.id }}"></span></p>';
         $buff = str_replace('{{ form.vars.value.payment_method }}', $replaced, $buff);
 
         $event->setSource($buff);
@@ -337,27 +335,6 @@ class PayJpEvent
 
     public function onRenderAdminOrderIndex(TemplateEvent $event) {
 
-        // JSファイルがなければオンデマンドで生成
-        if (! file_exists($this->getScriptDiskPath())) {
-            $this->makeScript();
-        }
-
-        $src = $event->getSource();
-
-        // {% endblock javascript %} を探す
-        // 手前にJavaScript読み込みタグを追加
-        $pos1 = strpos($src, '{% endblock javascript %}');
-        assert(0 < $pos1);
-        $buff = substr($src, 0, $pos1) . '<script type="text/javascript" src="/plugin/pay_jp/pay_jp_admin.js"></script>' . substr($src, $pos1);
-
-        // {{ Order.payment_method }} を置き換える
-        $replaced = "{{ Order.payment_method }}";
-        $replaced .= "{% if Order.payment_method == 'クレジットカード' %}";
-        $replaced .= '<p style="font-size: 85%;">支払いID: <span class="show_charge_id" id="show_charge_id_{{ Order.id }}"></span></p>';
-        $replaced .= "{% endif %}";
-        $buff = str_replace('{{ Order.payment_method }}', $replaced, $buff);
-
-        $event->setSource($buff);
     }
 
 
@@ -379,7 +356,8 @@ class PayJpEvent
         
         // dtb_orderから決済種別、会員かどうかを取得する
         if ($event->hasArgument('Order')) {
-            $this->willBePaidByCreditCard = $event->getArgument('Order')->getPayment()->getMethod() == 'クレジットカード';
+            $PayJpConfig = $this->app['pay_jp.repository.pay_jp_config']->findOneBy(array('id' => 1));
+            $this->willBePaidByCreditCard = ($event->getArgument('Order')->getPayment()->getId() == $PayJpConfig->getPayment()->getId());
             $this->eccubeCustomer = $event->getArgument('Order')->getCustomer();
             $this->creditCardPaymentId = $event->getArgument('Order')->getPayment()->getId();
         }

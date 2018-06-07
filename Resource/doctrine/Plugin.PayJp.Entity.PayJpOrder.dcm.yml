@@ -17,10 +17,10 @@ Plugin\PayJp\Entity\PayJpOrder:
             nullable: false
         pay_jp_customer_id:
             type: string
-            nullable: false
+            nullable: true
         pay_jp_token:
             type: string
-            nullable: false
+            nullable: true
         pay_jp_charge_id:
             type: string
             nullable: false

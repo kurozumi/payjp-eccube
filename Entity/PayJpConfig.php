@@ -23,6 +23,11 @@ class PayJpConfig extends \Eccube\Entity\AbstractEntity
      * @var created_at
      */
     private $created_at;
+    
+    /**
+     * @var Payment
+     */
+    private $Payment;
 
     /**
      * PayJpConfig constructor.
@@ -78,6 +83,29 @@ class PayJpConfig extends \Eccube\Entity\AbstractEntity
     public function setCreatedAt($created_at)
     {
         $this->created_at = $created_at;
+    }
+    
+    /**
+     * Set Payment
+     *
+     * @param  Payment
+     * @return Module
+     */
+    public function setPayment(\Eccube\Entity\Payment $Payment)
+    {
+        $this->Payment = $Payment;
+
+        return $this;
+    }
+
+    /**
+     * Get Payment
+     *
+     * @return Payment
+     */
+    public function getPayment()
+    {
+        return $this->Payment;
     }
     
 }

@@ -22,12 +22,12 @@ class AdminController extends AbstractController {
         $this->initCommon($app);
 
         $PayJpConfig = $this->app['orm.em']->getRepository('Plugin\PayJp\Entity\PayJpConfig')->findOneBy(array('id' => 1));
-        if (is_null($PayJpConfig)) {
-            $PayJpConfig = new PayJpConfig();
-            $PayJpConfig->setApiKeySecret('YOUR_SECRET_KEY');
-            $this->app['orm.em']->persist($PayJpConfig);
-            $this->app['orm.em']->flush($PayJpConfig);
-        }
+        //if (is_null($PayJpConfig)) {
+        //    $PayJpConfig = new PayJpConfig();
+        //    $PayJpConfig->setApiKeySecret('YOUR_SECRET_KEY');
+        //    $this->app['orm.em']->persist($PayJpConfig);
+        //    $this->app['orm.em']->flush($PayJpConfig);
+        //}
         $form = $app['form.factory']->createBuilder('pay_jp_api_key', $PayJpConfig)->getForm();
         $form->setData($PayJpConfig);
 

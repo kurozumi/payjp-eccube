@@ -17,4 +17,10 @@ Plugin\PayJp\Entity\PayJpConfig:
         created_at:
             type: datetime
             nullable: true
+    manyToOne:
+        Payment:
+            targetEntity: Eccube\Entity\Payment
+            joinColumn:
+                name: payment_id
+                referencedColumnName: payment_id
     lifecycleCallbacks: {  }

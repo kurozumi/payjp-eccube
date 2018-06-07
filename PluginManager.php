@@ -12,7 +12,7 @@ class PluginManager extends AbstractPluginManager
 
     public function install($config, $app)
     {
-        $this->migrationSchema($app, __DIR__ . '/Migration', $config['code']);
+        $this->migrationSchema($app, __DIR__ . '/Resource/doctrine/migration', $config['code']);
 
         // アセットを公開ディレクトリ以下にコピーする
         $this->deleteAssets();
@@ -21,64 +21,18 @@ class PluginManager extends AbstractPluginManager
 
     public function uninstall($config, $app)
     {
-        $this->migrationSchema($app, __DIR__ . '/Migration', $config['code'], 0);
+        $this->migrationSchema($app, __DIR__ . '/Resource/doctrine/migration', $config['code'], 0);
         $this->deleteAssets();
     }
 
     public function enable($config, $app)
     {
-        // クレジットカードという決済手段がなければ登録する
-        $payment = $app['eccube.repository.payment']
-            ->findOneBy(
-                array('method' => 'クレジットカード')
-            );
 
-        if (is_null($payment)) {
-            $softDeleteFilter = $app['orm.em']->getFilters()->getFilter('soft_delete');
-            $softDeleteFilter->setExcludes(array('Eccube\Entity\Member'));
-            $defaultCreator = $app['eccube.repository.member']->findOneBy(array('id' => 1));
-            $payment = $app['eccube.repository.payment']->findOrCreate(0);
-            $payment->setMethod('クレジットカード');
-            $payment->setCharge(0);
-            $payment->setRuleMin(0);
-            $payment->setCreator($defaultCreator);
-            $app['orm.em']->persist($payment);
-            $app['orm.em']->flush($payment);
-        }
-
-        // 全ての配送手段に対して有効にする
-        $deliveries = $app['eccube.repository.delivery']->findAll();
-        foreach ($deliveries as $delivery) {
-            $paymentOption = $app['eccube.repository.payment_option']->findOneBy(array('Payment' => $payment, 'Delivery' => $delivery));
-            if (is_null($paymentOption)) {
-                $paymentOption = new PaymentOption();
-                $paymentOption->setDelivery($delivery);
-                $paymentOption->setPayment($payment);
-                $paymentOption->setDeliveryId($delivery->getId());
-                $paymentOption->setPaymentId($payment->getId());
-                $app['orm.em']->persist($paymentOption);
-            }
-        }
-
-        $app['orm.em']->flush();
     }
 
     public function disable($config, $app)
     {
-        // dtb_payment_optionからクレジットカードを削除する
-        $Payment = $app['eccube.repository.payment']
-            ->findOneBy(
-                array('method' => 'クレジットカード')
-            );
-        if (! is_null($Payment)) {
-            $PaymentOptions = $app['eccube.repository.payment_option']->findAll();
-            foreach ($PaymentOptions as $PO) {
-                if ($PO->getPaymentId() == $Payment->getId()) {
-                    $app['orm.em']->remove($PO);
-                }
-            }
-            $app['orm.em']->flush();
-        }
+
     }
 
     public function update($config, $app)
