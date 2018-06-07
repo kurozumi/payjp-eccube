@@ -1,7 +1,7 @@
 Plugin\PayJp\Entity\PayJpConfig:
     type: entity
     table: plg_pay_jp_config
-    repositoryClass: Plugin\PayJp\Repository\PayJpTokenRepository
+    repositoryClass: Plugin\PayJp\Repository\PayJpConfigRepository
     id:
         id:
             type: integer
